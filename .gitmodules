@@ -1,0 +1,6 @@
+[submodule "third_party/libuv"]
+	path = third_party/libuv
+	url = https://github.com/libuv/libuv
+[submodule "third_party/oniguruma"]
+	path = third_party/oniguruma
+	url = https://github.com/kkos/oniguruma
