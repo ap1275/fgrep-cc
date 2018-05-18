@@ -3,9 +3,13 @@
 #include<cstdint>
 
 #if defined(_MSC_VER)
-#define API_DEF __declspec(dllexport)
+  #if defined(_WINDLL)
+    #define API_DEF __declspec(dllexport)
+  #else
+    #define API_DEF __declspec(dllimport)
+  #endif
 #else
-#define API_DEF
+  #define API_DEF
 #endif
 
 // singleton

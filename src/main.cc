@@ -50,15 +50,12 @@ int main(int argc, char ** argv) {
   bool os = false;
   bool use_stdin = false;
 
-  std::list<std::string> f;
-  std::string p;
-  std::list<std::string> r;
-  std::string s;
+  g::fgrep grep;
 
   for(int i = 0; i < argc; ++i) {
-    if(strcmp("-f", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') f.push_back(argv[i + 1]);
-    if(strcmp("-p", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') p = std::string(argv[i + 1]);
-    if(strcmp("-r", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') r.push_back(argv[i + 1]);
+    if(strcmp("-f", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') grep.fpattern.push_back(argv[i + 1]);
+    if(strcmp("-p", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') grep.root = std::string(argv[i + 1]);
+    if(strcmp("-r", argv[i]) == 0 && i + 1 < argc && *argv[i + 1] != '-') grep.rpattern.push_back(argv[i + 1]);
     if(strcmp("-s", argv[i]) == 0) use_stdin = true;
     if(strcmp("--fa", argv[i]) == 0) fa = true;
     if(strcmp("--fo", argv[i]) == 0) fo = true;
@@ -74,28 +71,26 @@ int main(int argc, char ** argv) {
     (fo && fa) ||
     (ro && ra) ||
     (of && os) ||
-    (of && ! r.empty()) ||
-    (use_stdin && (r.empty() || ! p.empty() || ! f.empty() || of || fo || fa)) ||
-    (f.empty() && r.empty() && ! use_stdin)
+    (of && ! grep.rpattern.empty()) ||
+    (use_stdin && (grep.rpattern.empty() || ! grep.root.empty() || ! grep.fpattern.empty() || of || fo || fa)) ||
+    (grep.fpattern.empty() && grep.rpattern.empty() && ! use_stdin)
   )
   {
     usage();
     return EXIT_SUCCESS;
   }
 
-  uint64_t flag;
-  flag = static_cast<uint64_t>(g::fgrep::flags::none);
-  if(fo) flag |= static_cast<uint64_t>(g::fgrep::flags::fo);
-  if(fa) flag |= static_cast<uint64_t>(g::fgrep::flags::fa);
-  if(ro) flag |= static_cast<uint64_t>(g::fgrep::flags::ro);
-  if(ra) flag |= static_cast<uint64_t>(g::fgrep::flags::ra);
-  if(l) flag |= static_cast<uint64_t>(g::fgrep::flags::l);
-  if(t) flag |= static_cast<uint64_t>(g::fgrep::flags::t);
-  if(of) flag |= static_cast<uint64_t>(g::fgrep::flags::of);
-  if(os) flag |= static_cast<uint64_t>(g::fgrep::flags::os);
-  if(use_stdin) flag |= static_cast<uint64_t>(g::fgrep::flags::use_stdin);
+  grep.flag = g::fgrep::flags::none;
+  if(fo) grep.flag |= g::fgrep::fo;
+  if(fa) grep.flag |= g::fgrep::flags::fa;
+  if(ro) grep.flag |= g::fgrep::flags::ro;
+  if(ra) grep.flag |= g::fgrep::flags::ra;
+  if(l) grep.flag |= g::fgrep::flags::l;
+  if(t) grep.flag |= g::fgrep::flags::t;
+  if(of) grep.flag |= g::fgrep::flags::of;
+  if(os) grep.flag |= g::fgrep::flags::os;
+  if(use_stdin) grep.flag |= g::fgrep::flags::use_stdin;
 
-  g::fgrep grep(static_cast<g::fgrep::flags>(flag), f, p, r);
 
   return EXIT_SUCCESS;
 }
