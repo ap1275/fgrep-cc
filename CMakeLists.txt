@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.7.2)
+
+#set(CMAKE_C_COMPILER "/usr/local/bin/clang" CACHE string "clang compiler" FORCE)
+#set(CMAKE_CXX_COMPILER "/usr/local/bin/clang++" CACHE string "clang++ compiler" FORCE)
+
+set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
+
+if (UNIX)
+  add_definitions("-Wall")
+  add_definitions("-std=c++17")
+  add_definitions("-msse4.2")
+  add_definitions("-mavx")
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  if (UNIX)
+    add_definitions("-O2")
+  endif()
+  if (WIN32)
+    add_definitions("/MD")
+  endif()
+else()
+  if (UNIX)
+    add_definitions("-ggdb3")
+    add_definitions("-O0")
+  endif()
+  if (WIN32)
+    add_definitions("/MDd")
+  endif()
+endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+project(fgrep)
+
+add_subdirectory(src)
+add_subdirectory(test)
