@@ -1,5 +1,7 @@
 #pragma once
 
+#include<cstdint>
+
 #if defined(_MSC_VER)
 #define API_DEF __declspec(dllexport)
 #else
@@ -35,4 +37,4 @@
 
 #define DECL_STRICT(x) \
   DECL_COPY_MOVE(x, delete); \
-  DECL_DEFAULT(x);
+  DECL_DEFAULT(x)
